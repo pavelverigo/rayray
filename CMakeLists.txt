@@ -3,9 +3,12 @@ cmake_minimum_required(VERSION 3.21)
 project(rayray)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(ppm src/ppm.cpp)
+
+# Main
+add_executable(${PROJECT_NAME} src/main.cpp)
 
 find_package(SDL2 QUIET)
 

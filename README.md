@@ -1,8 +1,6 @@
-<!-- Configure -->
-`cmake -S . -B out -G Ninja`
+- Configure (Debug): `cmake -S . -B out/Debug -G Ninja`
+- Configure (Release): `cmake -S . -B out/Release -G Ninja -DCMAKE_BUILD_TYPE=Release`
 
-<!-- Build -->
-`cmake --build out`
+- Build: `cmake --build out/Debug`
 
-<!-- Execute -->
-`./out/rayray`
+- Execute: `./out/rayray`
