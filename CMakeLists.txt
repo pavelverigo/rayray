@@ -29,3 +29,27 @@ if (NOT SDL2_FOUND)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2::SDL2main)
+
+find_package(glew QUIET)
+
+if (NOT glew_FOUND)
+  include(FetchContent)
+
+  FetchContent_Declare(
+    glew
+    URL https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0-win32.zip
+  )
+
+  FetchContent_MakeAvailable(glew)
+
+  add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${glew_SOURCE_DIR}/bin/Release/x64/glew32.dll" "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+    VERBATIM
+  )
+
+  target_include_directories(${PROJECT_NAME} PRIVATE ${glew_SOURCE_DIR}/include)
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${glew_SOURCE_DIR}/lib/Release/x64/glew32.lib)
+endif()
+
+
