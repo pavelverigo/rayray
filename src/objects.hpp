@@ -15,7 +15,7 @@ struct sphere {
 
     sphere(vec3 _center, double _radius) : center(_center), radius(_radius) {}
 
-    bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const {
+    bool hit(const ray& r, interval ray_t, hit_record& rec) const {
         vec3 oc = r.origin() - center;
         auto a = r.direction().length_squared();
         auto half_b = dot(oc, r.direction());
@@ -27,9 +27,9 @@ struct sphere {
 
         // Find the nearest root that lies in the acceptable range.
         auto root = (-half_b - sqrtd) / a;
-        if (root <= ray_tmin || ray_tmax <= root) {
+        if (root <= ray_t.min || ray_t.max <= root) {
             root = (-half_b + sqrtd) / a;
-            if (root <= ray_tmin || ray_tmax <= root)
+            if (root <= ray_t.min || ray_t.max <= root)
                 return false;
         }
 
@@ -44,13 +44,13 @@ struct sphere {
 struct world {
     std::vector<sphere> spheres;
 
-    bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const {
+    bool hit(const ray& r, interval ray_t, hit_record& rec) const {
         hit_record temp_rec;
         bool hit_anything = false;
-        auto closest_so_far = ray_tmax;
+        auto closest_so_far = ray_t.max;
 
         for (const auto& sphere : spheres) {
-            if (sphere.hit(r, ray_tmin, closest_so_far, temp_rec)) {
+            if (sphere.hit(r, {ray_t.min, closest_so_far}, temp_rec)) {
                 hit_anything = true;
                 closest_so_far = temp_rec.t;
                 rec = temp_rec;

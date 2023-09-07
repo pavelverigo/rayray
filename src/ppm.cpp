@@ -11,7 +11,7 @@ void write_color(std::ostream &out, vec3 pixel_color) {
 
 vec3 ray_color(const ray& r, const world& world) {
     hit_record rec;
-    if (world.hit(r, 0, infinity, rec)) {
+    if (world.hit(r, {0, infinity}, rec)) {
         return 0.5 * (rec.normal + vec3(1, 1, 1));
     }
 

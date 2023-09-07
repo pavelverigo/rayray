@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <random>
 #include <numbers>
 #include <iostream>
 
@@ -109,3 +110,32 @@ struct ray {
 
     vec3 at(double t) const { return orig + t * dir; }
 };
+
+double random_double() {
+    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    static std::mt19937 generator;
+    return distribution(generator);
+}
+
+inline double random_double(double min, double max) {
+    return min + (max - min) * random_double();
+}
+
+struct interval {
+    double min, max;
+
+    interval() : min(+infinity), max(-infinity) {}
+
+    interval(double _min, double _max) : min(_min), max(_max) {}
+
+    bool contains(double x) const {
+        return min <= x && x <= max;
+    }
+
+    bool surrounds(double x) const {
+        return min < x && x < max;
+    }
+};
+
+const static interval empty   (+infinity, -infinity);
+const static interval universe(-infinity, +infinity);
