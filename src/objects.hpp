@@ -3,19 +3,19 @@
 #include "math.hpp"
 #include <vector>
 
-struct hit_record {
+struct HitData {
     vec3 p;
     vec3 normal;
     double t;
 };
 
-struct sphere {
+struct Sphere {
     vec3 center;
     double radius;
 
-    sphere(vec3 _center, double _radius) : center(_center), radius(_radius) {}
+    Sphere(vec3 _center, double _radius) : center(_center), radius(_radius) {}
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const {
+    bool hit(const ray& r, interval ray_t, HitData& hit) const {
         vec3 oc = r.origin() - center;
         auto a = r.direction().length_squared();
         auto half_b = dot(oc, r.direction());
@@ -25,7 +25,6 @@ struct sphere {
         if (discriminant < 0) return false;
         auto sqrtd = sqrt(discriminant);
 
-        // Find the nearest root that lies in the acceptable range.
         auto root = (-half_b - sqrtd) / a;
         if (root <= ray_t.min || ray_t.max <= root) {
             root = (-half_b + sqrtd) / a;
@@ -33,27 +32,27 @@ struct sphere {
                 return false;
         }
 
-        rec.t = root;
-        rec.p = r.at(rec.t);
-        rec.normal = (rec.p - center) / radius;
+        hit.t = root;
+        hit.p = r.at(hit.t);
+        hit.normal = (hit.p - center) / radius;
 
         return true;
     }
 };
 
-struct world {
-    std::vector<sphere> spheres;
+struct World {
+    std::vector<Sphere> spheres;
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const {
-        hit_record temp_rec;
+    bool hit(const ray& r, interval ray_t, HitData& rec) const {
+        HitData temp_hit;
         bool hit_anything = false;
         auto closest_so_far = ray_t.max;
 
         for (const auto& sphere : spheres) {
-            if (sphere.hit(r, {ray_t.min, closest_so_far}, temp_rec)) {
+            if (sphere.hit(r, {ray_t.min, closest_so_far}, temp_hit)) {
                 hit_anything = true;
-                closest_so_far = temp_rec.t;
-                rec = temp_rec;
+                closest_so_far = temp_hit.t;
+                rec = temp_hit;
             }
         }
 

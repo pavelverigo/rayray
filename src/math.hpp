@@ -12,6 +12,15 @@ inline double degrees_to_radians(double degrees) {
     return degrees * pi / 180.0;
 }
 
+inline uint8_t double_to_byte_color(double d) {
+    if (d >= 1.0) {
+        return 255;
+    } else if (d <= 0.0) {
+        return 0;
+    }
+    return static_cast<uint8_t>(256.0 * d);
+}
+
 struct vec3 {
     double e[3];
 
@@ -50,6 +59,14 @@ struct vec3 {
 
     double length_squared() const {
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
+    }
+
+    static vec3 random() {
+        return vec3(random_double(), random_double(), random_double());
+    }
+
+    static vec3 random(double min, double max) {
+        return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
     }
 };
 
@@ -111,7 +128,7 @@ struct ray {
     vec3 at(double t) const { return orig + t * dir; }
 };
 
-double random_double() {
+inline double random_double() {
     static std::uniform_real_distribution<double> distribution(0.0, 1.0);
     static std::mt19937 generator;
     return distribution(generator);
@@ -134,6 +151,12 @@ struct interval {
 
     bool surrounds(double x) const {
         return min < x && x < max;
+    }
+
+    double clamp(double x) const {
+        if (x < min) return min;
+        if (x > max) return max;
+        return x;
     }
 };
 
