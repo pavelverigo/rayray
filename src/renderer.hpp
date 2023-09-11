@@ -41,6 +41,9 @@ struct ImageRGB {
 
 struct Renderer {
     double focal_length = 1.0;
+
+    // 0 will get it from std::thread::hardware_concurrency
+    unsigned int threads = 1; 
     
     // TODO better
     double viewport_height = 2.0;

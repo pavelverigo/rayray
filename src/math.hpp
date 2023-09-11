@@ -21,6 +21,16 @@ inline uint8_t double_to_byte_color(double d) {
     return static_cast<uint8_t>(256.0 * d);
 }
 
+inline double random_double() {
+    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    static std::mt19937 generator;
+    return distribution(generator);
+}
+
+inline double random_double(double min, double max) {
+    return min + (max - min) * random_double();
+}
+
 struct vec3 {
     double e[3];
 
@@ -127,16 +137,6 @@ struct ray {
 
     vec3 at(double t) const { return orig + t * dir; }
 };
-
-inline double random_double() {
-    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
-    static std::mt19937 generator;
-    return distribution(generator);
-}
-
-inline double random_double(double min, double max) {
-    return min + (max - min) * random_double();
-}
 
 struct interval {
     double min, max;

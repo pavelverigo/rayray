@@ -191,6 +191,13 @@ int main(int argc, char *argv[]) {
 
         ImGui::SliderInt("Samples per pixel", &renderer.samples_per_pixel, 1, 16);
 
+        {
+            ImU32 begin = 0;
+            ImU32 end = 16;
+            ImGui::SliderScalar("Thread count", ImGuiDataType_U32, &renderer.threads, &begin, &end);
+        }
+        
+
         ImGui::End();
 
         ImGui::Render();
